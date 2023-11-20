@@ -1,21 +1,27 @@
-def read_integer_between_numbers(prompt, mini, maximum):
+RACES_FILE = "Races.txt"
+RUNNERS_FILE = "runners.txt"
+
+
+
+def read_integer_between_numbers(prompt, min_value, max_value):
     while True:
         try:
-            users_input = int(input(prompt))
-            if maximum <= users_input >= mini:
-                return users_input
+            user_input = int(input(prompt))
+            if min_value <= user_input <= max_value:
+                return user_input
             else:
-                print(f"Numbers from {mini} to {maximum} only.")
+                print(f"Please enter a number between {min_value} and {max_value}.")
         except ValueError:
-            print("Sorry -numbor olny please")
+            print("Invalid input. Please enter a valid number.")
 
 
 def read_nonempty_string(prompt):
     while True:
         users_input = input(prompt)
         if len(users_input) > 0 and users_input.isalpha():
-            break
-    return users_input
+            return users_input
+        else :
+            print("Invalid input.Please enter a valid number.")
 
 
 def read_integer(prompt):
@@ -25,20 +31,48 @@ def read_integer(prompt):
             if users_input >= 0:
                 return users_input
         except ValueError:
-            print("Sorry -numbor olny please")
+            print("Invalid input. Please enter a valid integer.")
+
+def race_venues():
+    with open(RACES_FILE) as input_file:
+        lines = input_file.readlines()
+        races_location = [line.spliy(",")[0].strip("\n") for line in lines]
+        return races_location
+    
+def reading_race_results(location):
+    with open(f"{location}.txt") as input_type:
+        lines = input_type.readlines()
+        runner_ids = []
+        time_taken = []
+    for line in lines:
+        split_line = line.split(",".strip("\n"))
+        id.append(split_line[0])
+        time_taken.append(int(split_line[1].strip("\n")))
+    return id, time_taken
+
+def race_results(races_location):
+    for i in range(len(races_location)):
+        print(f"{i}: {races_location[i]}")
+    user_input = read_integer_between_numbers("Choice > ", 1, len(races_location))
+    selected_race = races_location[user_input - 1]
+    id, time_taken = reading_race_results(selected_race)
+    return id, time_taken, selected_race
 
 
 def runners_data():
-    with open("runners.txt") as input:
+    with open(RACES_FILE) as input_file:
         lines = input.readlines()
-    runners_name = []
-    runners_id = []
-    for line in lines:
-        split_line = line.split(",")
-        runners_name.append(split_line[0])
-        id = split_line[1].strip("\n")
-        runners_id.append(id)
-    return runners_name, runners_id
+        runners_name = []
+        runners_id = []
+
+        for line in lines:
+            split_line = line.split(",")
+            if len(split_line) == 2:
+                runners_name.append(split_line[0])
+                id = split_line[1].strip("\n")
+                runners_id.append(id)
+            else:
+                print(f"Invalid line in runners file: {line}")
 
 
 def race_results(races_location):
@@ -48,16 +82,6 @@ def race_results(races_location):
     venue = races_location[user_input - 1]
     id, time_taken = reading_race_results(venue)
     return id, time_taken, venue
-
-
-def race_venues():
-    with open("races.txt") as input:
-        lines = input.readlines()
-    races_location = []
-    for line in lines:
-        races_location.append(line.strip("\n"))
-    return races_location
-
 
 def winner_of_race(id, time_taken):
     quickest_time = min(time_taken)
@@ -120,16 +144,7 @@ def competitors_by_county(name, id):
             print(f"{name[i]} ({id[i]})")
 
 
-def reading_race_results(location):
-    with open(f"{location}.txt") as input_type:
-        lines = input_type.readlines()
-    id = []
-    time_taken = []
-    for line in lines:
-        split_line = line.split(",".strip("\n"))
-        id.append(split_line[0])
-        time_taken.append(int(split_line[1].strip("\n")))
-    return id, time_taken
+
 
 
 def reading_race_results_of_relevant_runner(location, runner_id):
