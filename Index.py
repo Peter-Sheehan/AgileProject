@@ -271,6 +271,22 @@ def display_runners_who_won(races_location, runners_names, runners_ids):
                 print(f"Runner with ID {winner_id} not found in the runners data.")
 
 
+def display_runners_without_podium(races_location, runners_name, runners_id):
+    print("Competitors who have not taken a podium position:")
+    print("=" * 45)
+
+    podium_runners = set()
+    for location in races_location:
+        ids, _ = reading_race_results(location)
+        podium = get_podium(ids, _)
+        podium_runners.update(podium)
+
+    non_podium_runners = set(runners_id) - podium_runners
+
+    for non_podium_runner_id in non_podium_runners:
+        non_podium_runner_name = find_name_of_winner(non_podium_runner_id, runners_name, runners_id)
+        print(f"{non_podium_runner_name} ({non_podium_runner_id})")
+
 def main():
     MENU = "1. View Race Venues\n2. View Runners\n3. View Race Results\n7. Quit\nEnter your choice:\n"
     input_menu = 0
