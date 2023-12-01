@@ -288,10 +288,10 @@ def display_runners_without_podium(races_location, runners_name, runners_id):
         print(f"{non_podium_runner_name} ({non_podium_runner_id})")
 
 def main():
-    MENU = "1. View Race Venues\n2. View Runners\n3. View Race Results\n7. Quit\nEnter your choice:\n"
+    MENU = "1. View Race Venues\n2. View Runners\n3. View Race Results\n4. Podium Places\n5. Race Times for Competitor\n6. Runners Who Won\n7. Runners Without Podium\n8. Quit\nEnter your choice:\n"
     input_menu = 0
-    
-    while input_menu != 7:
+
+    while input_menu != 8:
         if input_menu == 1:
             venues = race_venues()
             print("Race Venues:")
@@ -300,7 +300,7 @@ def main():
         elif input_menu == 2:
             runners_names, runners_ids = runners_data()
             print("Runners:")
-
+            
             competitors_by_county(runners_names, runners_ids)
             
         elif input_menu == 3:
@@ -312,7 +312,23 @@ def main():
             print(f"Results for {selected_race}:")
             for runner_id, time in zip(id, time_taken):
                 print(f"Runner ID: {runner_id}, Time Taken: {time} seconds")
-        input_menu = read_integer_between_numbers(MENU, 1, 7)
+        elif input_menu == 4:
+            venues = race_venues()
+            display_podium_places(venues)
+        elif input_menu == 5:
+            venues = race_venues()
+            runners_names, runners_ids = runners_data()
+            display_race_times_for_competitor(venues, runners_names, runners_ids)
+        elif input_menu == 6:
+            venues = race_venues()
+            runners_names, runners_ids = runners_data()
+            display_runners_who_won(venues, runners_names, runners_ids)
+        elif input_menu == 7:
+            venues = race_venues()
+            runners_names, runners_ids = runners_data()
+            display_runners_without_podium(venues, runners_names, runners_ids)
+
+        input_menu = read_integer_between_numbers(MENU, 1, 8)
 
 if __name__ == "__main__":
     main()
