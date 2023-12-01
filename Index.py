@@ -158,6 +158,12 @@ def updating_races_file(races_location):
         print(races_location[i], file=connection)
     connection.close()
 
+def winner_of_race(ids, times):
+    if not ids or not times:
+        return None
+
+    min_time_index = times.index(min(times))
+    return ids[min_time_index]
 
 def main():
     MENU = "1. View Race Venues\n2. View Runners\n3. View Race Results\n7. Quit\nEnter your choice:\n"
