@@ -1,4 +1,4 @@
-
+import os
 
 RACES_FILE = "races.txt"
 RUNNERS_FILE = "runners.txt"
@@ -45,17 +45,39 @@ def race_venues():
     return races_location
 
 def reading_race_results(location):
-    with open(f"{location}.txt") as input_type:
+    file_path = f"{location}.txt"
+    if not os.path.isfile(file_path):
+        print(f"Invalid file path: {file_path}")
+        return [], []
+
+    ids = []
+    time_taken = []
+
+    with open(file_path) as input_type:
         lines = input_type.readlines()
-        runner_ids = []
-        time_taken = []
 
         for line in lines:
             split_line = line.strip().split(",")
-            runner_ids.append(split_line[0])
-            time_taken.append(int(split_line[1]))
+            if len(split_line) >= 2:
+                try:
+                    runner_id = split_line[0]
+                    time_value = int(split_line[1])
+                    ids.append(runner_id)
+                    time_taken.append(time_value)
+                except (ValueError, IndexError):
+                    print(f"Invalid line in {file_path}: {line}")
+            elif line.strip():  # Check if the line is not empty
+                print(f"Invalid line in {file_path}: {line}")
 
-    return runner_ids, time_taken
+    if not ids or not time_taken:
+        print(f"No valid data in {file_path}")
+        return [], []
+
+    # Sort ids and time_taken together based on time_taken
+    sorted_results = sorted(zip(time_taken, ids), key=lambda x: x[0])
+    time_taken, ids = zip(*sorted_results)
+
+    return ids, time_taken
 
 def race_results(races_location):
     for i in range(len(races_location)):
