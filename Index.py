@@ -202,17 +202,27 @@ def sorting_where_runner_came_in_race(location, time):
         print(f"")
         return None, None
 
-def display_podium_places(races_location):
+def display_podium_places(races_location, runners_name, runners_id):
     print("Race Podium Places")
-    print("=" * 30)
+    print("=" * 50)
 
     for location in races_location:
         ids, times = reading_race_results(location)
+        podium = get_podium(ids, times)
 
-        print(f"{location}:")
-        for position, (runner_id, time) in enumerate(zip(ids, times), 1):
-            print(f"   {position}. {runner_id} - Time: {time} seconds")
-        print()
+        if podium:
+            print(f"\n{location}:")
+            print("=" * 30)
+            print("| Position | Runner ID | Runner Name | Time (seconds) |")
+            print("|-----------|-----------|-------------|-----------------|")
+
+            for position, runner_id in enumerate(podium, 1):
+                runner_name = find_name_of_winner(runner_id, runners_name, runners_id)
+                time_taken = times[ids.index(runner_id)]
+
+                print(f"| {position}         | {runner_id}        | {runner_name}   | {time_taken}              |")
+
+    print("\n")
 
 def get_podium(ids, times):
     podium = []
@@ -300,7 +310,7 @@ def main():
         elif input_menu == 2:
             runners_names, runners_ids = runners_data()
             print("Runners:")
-            
+
             competitors_by_county(runners_names, runners_ids)
             
         elif input_menu == 3:
