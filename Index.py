@@ -202,7 +202,18 @@ def sorting_where_runner_came_in_race(location, time):
         print(f"")
         return None, None
 
+def display_podium_places(races_location):
+    print("Race Podium Places")
+    print("=" * 30)
 
+    for location in races_location:
+        ids, times = reading_race_results(location)
+
+        print(f"{location}:")
+        for position, (runner_id, time) in enumerate(zip(ids, times), 1):
+            print(f"   {position}. {runner_id} - Time: {time} seconds")
+        print()
+        
 def main():
     MENU = "1. View Race Venues\n2. View Runners\n3. View Race Results\n7. Quit\nEnter your choice:\n"
     input_menu = 0
