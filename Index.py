@@ -249,6 +249,27 @@ def display_race_times_for_competitor(races_location, runners_name, runners_id):
         except ValueError:
             print(f"{location}: 0")
 
+def display_runners_who_won(races_location, runners_names, runners_ids):
+    print("Competitors who have won at least one race:")
+    print("=" * 45)
+
+    winners = set()
+    for location in races_location:
+        results = reading_race_results(location)
+        if results[0]:  # Check if there are results for the race
+            fastest_runner = results[0][0]
+            winners.add(fastest_runner)
+
+    if not winners:
+        print("No winners found.")
+    else:
+        for winner_id in winners:
+            winner_name = find_name_of_winner(winner_id, runners_names, runners_ids)
+            if winner_name:
+                print(f"{winner_name} ({winner_id})")
+            else:
+                print(f"Runner with ID {winner_id} not found in the runners data.")
+
 
 def main():
     MENU = "1. View Race Venues\n2. View Runners\n3. View Race Results\n7. Quit\nEnter your choice:\n"
