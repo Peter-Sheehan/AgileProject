@@ -176,6 +176,33 @@ def convert_time_to_minutes_and_seconds(time_taken):
     seconds = time_taken % MINUTE
     return minutes, seconds
 
+def sorting_where_runner_came_in_race(location, time):
+    file_path = f"{location}.txt"
+
+    if not os.path.isfile(file_path):
+        print(f"Invalid file path: {file_path}")
+        return None, None
+
+    try:
+        with open(file_path) as input_type:
+            lines = input_type.readlines()
+
+        if not lines:
+            print(f"No data available for {location}")
+            return None, None
+
+        time_taken = [int(line.split(",")[1].strip("\n")) for line in lines]
+        time_taken.sort()
+
+        position = time_taken.index(time) + 1
+        number_in_race = len(lines)
+
+        return position, number_in_race
+    except (ValueError, IndexError):
+        print(f"")
+        return None, None
+
+
 def main():
     MENU = "1. View Race Venues\n2. View Runners\n3. View Race Results\n7. Quit\nEnter your choice:\n"
     input_menu = 0
