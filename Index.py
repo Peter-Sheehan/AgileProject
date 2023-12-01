@@ -76,11 +76,11 @@ def runners_data():
         runners_id = []
 
         for line in lines:
-            split_line = line.split(",")
-            if len(split_line) == 2:
+            split_line = line.strip().split(",")
+            if len(split_line) >= 2:
                 runners_name.append(split_line[0])
-                id = split_line[1].strip("\n")
-                runners_id.append(id)
+                runner_id = split_line[1].strip("\n")
+                runners_id.append(runner_id)
             else:
                 print(f"Invalid line in runners file: {line}")
 
