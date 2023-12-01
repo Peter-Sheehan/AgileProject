@@ -223,6 +223,33 @@ def get_podium(ids, times):
 
     return podium
 
+def display_race_times_for_competitor(races_location, runners_name, runners_id):
+    print("Select a competitor:")
+    for i, name in enumerate(runners_name):
+        print(f"{i + 1}. {name}")
+
+    selected_index = read_integer_between_numbers("Enter the competitor's number: ", 1, len(runners_name))
+    selected_runner_id = runners_id[selected_index - 1]
+    selected_runner_name = runners_name[selected_index - 1]
+
+    print(f"\nRace times for {selected_runner_name} ({selected_runner_id}):")
+    print("=" * 45)
+
+    for location in races_location:
+        ids, times = reading_race_results(location)
+        try:
+            index = ids.index(selected_runner_id)
+            time_taken = times[index]
+            if time_taken is not None:
+                minutes, seconds = convert_time_to_minutes_and_seconds(time_taken)
+                came_in_race, number_in_race = sorting_where_runner_came_in_race(location, time_taken)
+                print(f"{location}: {minutes} mins {seconds} secs")
+            else:
+                print(f"{location}: 0")
+        except ValueError:
+            print(f"{location}: 0")
+
+
 def main():
     MENU = "1. View Race Venues\n2. View Runners\n3. View Race Results\n7. Quit\nEnter your choice:\n"
     input_menu = 0
