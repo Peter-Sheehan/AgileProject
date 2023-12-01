@@ -213,7 +213,16 @@ def display_podium_places(races_location):
         for position, (runner_id, time) in enumerate(zip(ids, times), 1):
             print(f"   {position}. {runner_id} - Time: {time} seconds")
         print()
-        
+
+def get_podium(ids, times):
+    podium = []
+    sorted_results = sorted(zip(ids, times), key=lambda x: x[1])[:3]
+
+    for result in sorted_results:
+        podium.append(result[0])
+
+    return podium
+
 def main():
     MENU = "1. View Race Venues\n2. View Runners\n3. View Race Results\n7. Quit\nEnter your choice:\n"
     input_menu = 0
