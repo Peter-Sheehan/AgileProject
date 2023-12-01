@@ -58,7 +58,7 @@ def reading_race_results(location):
     return runner_ids, time_taken
 
 def race_results(races_location):
-    for i in range(len(races_location)):            #Will improve this
+    for i in range(len(races_location)):
         print(f"{i + 1}:{races_location[i]}")
 
     user_input = read_integer_between_numbers("Choose a race (enter the number): ", 1, len(races_location))
@@ -67,6 +67,13 @@ def race_results(races_location):
     id, time_taken = reading_race_results(selected_race)
 
     return id, time_taken, selected_race
+
+def race_venues():
+    with open(RACES_FILE) as input_file:
+        lines = input_file.readlines()
+        races_location = [line.split(",")[0].strip("\n") for line in lines]
+
+    return races_location
 
 
 def runners_data():
