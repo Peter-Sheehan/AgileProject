@@ -177,7 +177,7 @@ def convert_time_to_minutes_and_seconds(time_taken):
     return minutes, seconds
 
 def sorting_where_runner_came_in_race(location, time):
-    file_path = f"{location}.txt"
+    file_path = (f"{location}.txt")
 
     if not os.path.isfile(file_path):
         print(f"Invalid file path: {file_path}")
@@ -216,7 +216,7 @@ def display_podium_places(races_location, runners_name, runners_id):
             print("| Position | Runner ID | Runner Name | Time (seconds) |")
             print("|-----------|-----------|-------------|-----------------|")
 
-            for position, runner_id in enumerate(podium, 1):
+            for position, runner_id in enumerate(podium[:3], 1):
                 runner_name = find_name_of_winner(runner_id, runners_name, runners_id)
                 time_taken = times[ids.index(runner_id)]
 
