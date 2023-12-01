@@ -165,6 +165,11 @@ def winner_of_race(ids, times):
     min_time_index = times.index(min(times))
     return ids[min_time_index]
 
+def find_name_of_winner(winner_id, runners_name, runners_id):
+    for i in range(len(runners_id)):
+        if winner_id == runners_id[i]:
+            return runners_name[i]
+
 def main():
     MENU = "1. View Race Venues\n2. View Runners\n3. View Race Results\n7. Quit\nEnter your choice:\n"
     input_menu = 0
