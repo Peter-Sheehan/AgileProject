@@ -310,6 +310,7 @@ def updating_races_file(races_location):
         for location in races_location:
             print(location, file=connection)
 
+
 def add_race_results(venue, runners_ids):
     file_path = f"{venue}.txt"
 
