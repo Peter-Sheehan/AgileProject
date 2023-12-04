@@ -37,6 +37,13 @@ def read_integer(prompt):
             print("Invalid input. Please enter a valid integer.")
             
 
+def race_venues():
+    with open(RACES_FILE) as input_file:
+        lines = input_file.readlines()
+        races_location = [line.split(",")[0].strip("\n") for line in lines]
+
+    return races_location
+
 def reading_race_results(location):
     file_path = f"{location}.txt"
     if not os.path.isfile(file_path):
@@ -47,27 +54,22 @@ def reading_race_results(location):
     time_taken = []
 
     with open(file_path) as input_type:
-        lines = input_type.readlines()
-
-        for line in lines:
+        for line in input_type:
             split_line = line.strip().split(",")
-            if split_line:
-                if len(split_line) >= 2:
-                    try:
-                        runner_id = split_line[0]
-                        time_value = int(split_line[1])
-                        ids.append(runner_id)
-                        time_taken.append(time_value)
-                    except (ValueError, IndexError):
-                        print(f"Invalid line in {file_path}: {line}")
-                else:
-                    print(f"Invalid line in {file_path}: {line}")
+            if len(split_line) >= 2:
+                try:
+                    runner_id = split_line[0]
+                    time_value = int(split_line[1])
+                    ids.append(runner_id)
+                    time_taken.append(time_value)
+                except (ValueError, IndexError):
+                    pass  # Ignore invalid lines without printing errors
 
     if not ids or not time_taken:
         print(f"No valid data in {file_path}")
         return [], []
-    
-    
+
+    # Sort ids and time_taken together based on time_taken
     sorted_results = sorted(zip(time_taken, ids), key=lambda x: x[0])
     time_taken, ids = zip(*sorted_results)
 
@@ -125,7 +127,10 @@ def competitors_by_county(name, id):
         print("=" * 20)
         for runner in sorted(runners, key=lambda x: x[0]):  # Sort by name
             print(f"{runner[0]} ({runner[1]})")
-                        
+            
+            
+            
+            
 def users_venue(races_location, runners_id):
     while True:
         user_location = read_nonempty_string("Where will the new race take place?").capitalize()
@@ -217,6 +222,7 @@ def display_podium_places(races_location, runners_name, runners_id):
                     print(f"| {position}         | {runner_id}        | {runner_name}   | {time_taken}              |")
 
     print("\n")
+
 
 def get_podium(ids, times):
     podium = []
