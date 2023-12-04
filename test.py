@@ -119,35 +119,33 @@ class TestIndexFunctions(unittest.TestCase):
         mock_print.assert_has_calls(expected_calls, any_order=False)
     
     # Test for user_venue
-@patch('builtins.input', side_effect=['Newlocation', '10', '15', '0'])  # Updated to 'Newlocation'
+@patch('Index.read_nonempty_string', side_effect=['NewLocation', '10', '15', '0'])  # Updated to 'NewLocation'
+@patch('Index.read_integer', side_effect=[10, 15, 0])  # Sample times for runners, 0 to stop
 @patch('builtins.open', new_callable=mock_open)
-def test_users_venue(self, mock_file_open, mock_input):
-    races_location = ['OldLocation']
-    runners_id = ['ID1', 'ID2']
+@patch('builtins.input', side_effect=['Newlocation', '10', '15', '0'])  # Define mock_input here
+def test_users_venue(self, mock_input, mock_file_open, mock_read_integer, mock_read_nonempty_string):
+        runners_id = ['ID1', 'ID2']
+        races_location = ['OldLocation']
 
-    # Import the users_venue function here or provide the necessary import
+        users_venue(races_location, runners_id)
 
-    # Call the function
-    users_venue(races_location, runners_id)
+        # Check if the new location was added
+        self.assertIn('NewLocation', races_location)
 
-    # Check if the new location was added
-    self.assertIn('Newlocation', races_location)  # Updated to 'Newlocation'
+        # Check if the file was opened correctly
+        mock_file_open.assert_called_once_with('NewLocation.txt', 'a')
 
-    # Check if the file was opened correctly
-    mock_file_open.assert_called_once_with('Newlocation.txt', 'a')  # Updated to 'Newlocation'
+        # Check the write calls to the file
+        mock_file_open().write.assert_has_calls([
+            call('ID1,10,\n'),
+            call('ID2,15,\n')
+        ], any_order=False)
 
-    # Check the write calls to the file
-    mock_file_open().write.assert_has_calls([
-        call('ID1,10,\n'),
-        call('ID2,15,\n')
-    ], any_order=False)
-
-    # Check if read_integer was called correctly
-    mock_input.assert_has_calls([
-        call('Where will the new race take place?'),
-        call('Time for ID1 >>'),
-        call('Time for ID2 >>')
-    ], any_order=False)
+        # Check if read_integer was called correctly
+        mock_read_integer.assert_has_calls([
+            call('Time for ID1 >>'),
+            call('Time for ID2 >>')
+        ], any_order=False)
 
     #Test updating_race_file
 @patch('builtins.open', new_callable=mock_open)
