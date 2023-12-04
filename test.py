@@ -288,6 +288,31 @@ class TestIndexFunctions(unittest.TestCase):
                 self.assertIsNone(position)
                 self.assertIsNone(number_in_race)  # Expect None for both position and number_in_race if time is not found
 
+    #Test get_podium
+    def test_get_podium(self):
+        # Test with normal data
+        ids = ['ID1', 'ID2', 'ID3', 'ID4']
+        times = [300, 250, 400, 200]
+        podium = get_podium(ids, times)
+        self.assertEqual(podium, ['ID4', 'ID2', 'ID1'])  # ID4, ID2, ID1 have the lowest times
+
+        # Test with empty lists
+        ids = []
+        times = []
+        podium = get_podium(ids, times)
+        self.assertEqual(podium, [])
+
+        # Test with fewer than three participants
+        ids = ['ID1', 'ID2']
+        times = [300, 250]
+        podium = get_podium(ids, times)
+        self.assertEqual(podium, ['ID2', 'ID1'])  # Only two participants
+
+        # Test with tie times (optional)
+        ids = ['ID1', 'ID2', 'ID3']
+        times = [300, 300, 300]
+        podium = get_podium(ids, times)
+        self.assertEqual(podium, ['ID1', 'ID2', 'ID3'])  # All have the same time
 
 
 
