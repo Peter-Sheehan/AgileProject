@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch, mock_open
 import os
-from Index import read_integer, reading_race_results, read_integer_between_numbers
+from Index import read_integer, reading_race_results, read_integer_between_numbers,race_venues
  # Adjust import if necessary
 
 class TestIndexFunctions(unittest.TestCase):
@@ -76,5 +76,11 @@ class TestIndexFunctions(unittest.TestCase):
         mock_print.assert_called_with("Invalid input. Please enter a valid number.")
         self.assertEqual(result, 5)    
 
+    #Test for race_venues
+    @patch('builtins.open', new_callable=mock_open, read_data='Race1,Location1\nRace2,Location2\n')
+    @patch('Index.RACES_FILE', 'dummy_races_file.txt')  # Mock the RACES_FILE constant if necessary
+    def test_race_venues(self, mock_file):
+        venues = race_venues()
+        self.assertEqual(venues, ['Race1', 'Race2'])
 if __name__ == '__main__':
     unittest.main()
