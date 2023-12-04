@@ -1,9 +1,7 @@
 import unittest
-from unittest.mock import patch, mock_open,call
+from unittest.mock import patch, mock_open, call
 import os
 from Index import*
-#from Index import read_integer, reading_race_results, read_integer_between_numbers,race_venues
- # Adjust import if necessary
 
 class TestIndexFunctions(unittest.TestCase):
 
