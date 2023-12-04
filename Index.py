@@ -44,6 +44,8 @@ def race_venues():
 
     return races_location
 
+
+
 def reading_race_results(location):
     file_path = f"{location}.txt"
     if not os.path.isfile(file_path):
