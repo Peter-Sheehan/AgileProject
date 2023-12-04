@@ -53,5 +53,27 @@ class TestIndexFunctions(unittest.TestCase):
         self.assertEqual(times, [])
         mock_print.assert_called_with("Invalid file path: nonexistent.txt")
 
+     # Test read_integer_between_numbers with valid input within range
+    @patch('builtins.input', return_value='5')
+    def test_read_integer_between_valid(self, mock_input):
+        result = read_integer_between_numbers("Enter a number: ", 1, 10)
+        self.assertEqual(result, 5)
+
+    # Test read_integer_between_numbers with input outside range
+    @patch('builtins.input', side_effect=['0', '11', '5'])
+    @patch('builtins.print')
+    def test_read_integer_between_outside_range(self, mock_print, mock_input):
+        result = read_integer_between_numbers("Enter a number: ", 1, 10)
+        mock_print.assert_any_call("Please enter a number between 1 and 10.")
+        self.assertEqual(result, 5)
+
+    # Test read_integer_between_numbers with non-integer input
+    @patch('builtins.input', side_effect=['abc', '5'])
+    @patch('builtins.print')
+    def test_read_integer_between_non_integer(self, mock_print, mock_input):
+        result = read_integer_between_numbers("Enter a number: ", 1, 10)
+        mock_print.assert_called_with("Invalid input. Please enter a valid number.")
+        self.assertEqual(result, 5)    
+
 if __name__ == '__main__':
     unittest.main()
