@@ -1,7 +1,8 @@
 import unittest
-from unittest.mock import patch, mock_open
+from unittest.mock import patch, mock_open,call
 import os
-from Index import read_integer, reading_race_results, read_integer_between_numbers,race_venues
+from Index import*
+#from Index import read_integer, reading_race_results, read_integer_between_numbers,race_venues
  # Adjust import if necessary
 
 class TestIndexFunctions(unittest.TestCase):
@@ -82,5 +83,42 @@ class TestIndexFunctions(unittest.TestCase):
     def test_race_venues(self, mock_file):
         venues = race_venues()
         self.assertEqual(venues, ['Race1', 'Race2'])
+
+    # Test for runners_data
+    @patch('builtins.open', new_callable=mock_open, read_data='Runner1,ID1\nRunner2,ID2\n')
+    @patch('Index.RUNNERS_FILE', 'dummy_runners_file.txt')  # Mock the RUNNERS_FILE constant if necessary
+    def test_runners_data(self, mock_file):
+        names, ids = runners_data()
+        self.assertEqual(names, ['Runner1', 'Runner2'])
+        self.assertEqual(ids, ['ID1', 'ID2'])
+
+    @patch('builtins.open', new_callable=mock_open, read_data='InvalidLine\nRunner1,ID1\n')
+    @patch('builtins.print')
+    @patch('Index.RUNNERS_FILE', 'dummy_runners_file.txt')
+    def test_runners_data_invalid_line(self, mock_print, mock_file):
+        names, ids = runners_data()
+        self.assertEqual(names, ['Runner1'])
+        self.assertEqual(ids, ['ID1'])
+        mock_print.assert_called_with("Invalid line in runners file: InvalidLine\n")
+
+    #Test for competitors_by_county
+    @patch('builtins.print')
+    def test_competitors_by_county(self, mock_print):
+        names = ['Alice', 'Bob', 'Charlie']
+        ids = ['AB123', 'AB456', 'CD789']
+        competitors_by_county(names, ids)
+
+        expected_calls = [
+            call('AB runners'),
+            call('===================='),
+            call('Alice (AB123)'),
+            call('Bob (AB456)'),
+            call('CD runners'),
+            call('===================='),
+            call('Charlie (CD789)')
+        ]
+
+        mock_print.assert_has_calls(expected_calls, any_order=False)
+
 if __name__ == '__main__':
     unittest.main()
