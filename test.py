@@ -173,37 +173,120 @@ class TestIndexFunctions(unittest.TestCase):
 
     #Test winner_of_race
     def test_winner_of_race(self):
-        # Test with normal data
-        ids, times = ['ID1', 'ID2', 'ID3'], [300, 400, 500]
-        winner = winner_of_race(ids, times)
-        # Add an appropriate assertion here based on the expected behavior of your function
+            # Test with normal data
+            ids, times = ['ID1', 'ID2', 'ID3'], [300, 400, 200]
+            winner = winner_of_race(ids, times)
+            self.assertEqual(winner, 'ID3')  # ID3 has the minimum time (200)
 
-        # Test with empty ids
-        ids, times = [], [300, 400, 500]
-        winner = winner_of_race(ids, times)
-        self.assertIsNone(winner)
+            # Test with empty ids
+            ids, times = [], [300, 400, 500]
+            winner = winner_of_race(ids, times)
+            self.assertIsNone(winner)
 
-        # Test with empty times
-        ids, times = ['ID1', 'ID2', 'ID3'], []
-        winner = winner_of_race(ids, times)
-        self.assertIsNone(winner)
+            # Test with empty times
+            ids, times = ['ID1', 'ID2', 'ID3'], []
+            winner = winner_of_race(ids, times)
+            self.assertIsNone(winner)
 
-        # Test with both ids and times as empty
-        ids, times = [], []
-        winner = winner_of_race(ids, times)
-        self.assertIsNone(winner)
+            # Test with both ids and times as empty
+            ids, times = [], []
+            winner = winner_of_race(ids, times)
+            self.assertIsNone(winner)
 
-        # Test with ids as None
-        winner = winner_of_race(None, [300, 400, 500])
-        self.assertIsNone(winner)
+            # Test with ids as None
+            winner = winner_of_race(None, [300, 400, 500])
+            self.assertIsNone(winner)
 
-        # Test with times as None
-        winner = winner_of_race(['ID1', 'ID2', 'ID3'], None)
-        self.assertIsNone(winner)
+            # Test with times as None
+            winner = winner_of_race(['ID1', 'ID2', 'ID3'], None)
+            self.assertIsNone(winner)
 
-        # Test with both ids and times as None
-        winner = winner_of_race(None, None)
-        self.assertIsNone(winner)
+            # Test with both ids and times as None
+            winner = winner_of_race(None, None)
+            self.assertIsNone(winner)
+    #Test fine_name_of_winner
+    
+    def test_find_name_of_winner(self):
+        # Setup mock data
+        runners_name = ['Alice', 'Bob', 'Charlie']
+        runners_id = ['ID1', 'ID2', 'ID3']
+
+        # Test with a matching winner_id
+        winner_id = 'ID2'
+        winner_name = find_name_of_winner(winner_id, runners_name, runners_id)
+        self.assertEqual(winner_name, 'Bob')
+
+        # Test with no matching winner_id
+        winner_id = 'ID4'
+        winner_name = find_name_of_winner(winner_id, runners_name, runners_id)
+        self.assertIsNone(winner_name)
+
+        # Test with empty lists
+        winner_id = 'ID1'
+        winner_name = find_name_of_winner(winner_id, [], [])
+        self.assertIsNone(winner_name)
+
+        #Test convert_time_to_minute_and_seconds
+        def test_convert_time_to_minutes_and_seconds(self):
+            # Test with normal data
+            time_taken = 125  # 2 minutes and 5 seconds
+            minutes, seconds = convert_time_to_minutes_and_seconds(time_taken)
+            self.assertEqual(minutes, 2)
+            self.assertEqual(seconds, 5)
+
+            # Test with time_taken as zero
+            time_taken = 0
+            minutes, seconds = convert_time_to_minutes_and_seconds(time_taken)
+            self.assertEqual(minutes, 0)
+            self.assertEqual(seconds, 0)
+
+            # Test with time_taken exactly 60 seconds
+            time_taken = 60
+            minutes, seconds = convert_time_to_minutes_and_seconds(time_taken)
+            self.assertEqual(minutes, 1)
+            self.assertEqual(seconds, 0)
+
+            # Test with a large value of time_taken
+            time_taken = 3665  # 61 minutes and 5 seconds
+            minutes, seconds = convert_time_to_minutes_and_seconds(time_taken)
+            self.assertEqual(minutes, 61)
+            self.assertEqual(seconds, 5)
+
+    #Test sorting_where_runner_came_in_race
+    def test_sorting_where_runner_came_in_race(self):
+        with patch('os.path.isfile', return_value=True):
+            with patch('builtins.open', new_callable=mock_open, read_data="Runner1,300\nRunner2,200\nRunner3,250\n"):
+                # Test with valid data
+                position, number_in_race = sorting_where_runner_came_in_race("valid_location", 250)
+                self.assertEqual(position, 2)
+                self.assertEqual(number_in_race, 3)
+
+            with patch('builtins.open', new_callable=mock_open, read_data=""):
+                # Test with empty file
+                position, number_in_race = sorting_where_runner_came_in_race("empty_location", 250)
+                self.assertIsNone(position)
+                self.assertIsNone(number_in_race)
+
+        with patch('os.path.isfile', return_value=False):
+            # Test with invalid file path
+            position, number_in_race = sorting_where_runner_came_in_race("invalid_location", 250)
+            self.assertIsNone(position)
+            self.assertIsNone(number_in_race)
+
+        with patch('os.path.isfile', return_value=True):
+            with patch('builtins.open', new_callable=mock_open, read_data="Runner1,xyz\nRunner2,200\n"):
+                # Test with file containing invalid data
+                position, number_in_race = sorting_where_runner_came_in_race("invalid_data_location", 200)
+                self.assertIsNone(position)
+                self.assertIsNone(number_in_race)
+
+        
+        with patch('os.path.isfile', return_value=True):
+            with patch('builtins.open', new_callable=mock_open, read_data="Runner1,300\nRunner2,200\n"):
+                # Test searching for non-existent time
+                position, number_in_race = sorting_where_runner_came_in_race("valid_location", 400)
+                self.assertIsNone(position)
+                self.assertIsNone(number_in_race)  # Expect None for both position and number_in_race if time is not found
 
 
 
