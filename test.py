@@ -28,18 +28,17 @@ class TestIndexFunctions(unittest.TestCase):
 
     # Tests for reading_race_results
 
-@patch('os.path.isfile', return_value=True)
-@patch('builtins.open', new_callable=mock_open, read_data='1,300\n2,600\n3,400')
-def test_reading_race_results_valid(self, mock_file, mock_isfile):
-    ids, times = reading_race_results('valid_data')
-    self.assertEqual(ids, ('1', '3', '2'))
-    self.assertEqual(times, (300, 400, 600))
-
+    @patch('os.path.isfile', return_value=True)
+    @patch('builtins.open', new_callable=mock_open, read_data='1,300\n2,600\n3,400')
+    def test_reading_race_results_valid(self, mock_isfile, mock_file):
+        ids, times = reading_race_results('valid_data')
+        self.assertEqual(ids, ('1', '3', '2'))
+        self.assertEqual(times, (300, 400, 600))
 
     @patch('os.path.isfile', return_value=True)
     @patch('builtins.open', new_callable=mock_open, read_data='1,300\ninvalid,line\n3,400')
     @patch('builtins.print')
-    def test_reading_race_results_invalid_line(self, mock_print, mock_file, mock_isfile):
+    def test_reading_race_results_invalid_line(self, mock_print, mock_isfile, mock_file):
         ids, times = reading_race_results('invalid_line')
         self.assertEqual(ids, ('3', '1'))
         self.assertEqual(times, (400, 300))
