@@ -1,7 +1,8 @@
 import unittest
 from unittest.mock import patch, mock_open
 import os
-from Index import read_integer, reading_race_results  # Adjust import if necessary
+from Index import read_integer, reading_race_results, read_integer_between_numbers
+ # Adjust import if necessary
 
 class TestIndexFunctions(unittest.TestCase):
 
